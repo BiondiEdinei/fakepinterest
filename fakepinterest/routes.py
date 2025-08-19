@@ -7,7 +7,7 @@ from fakepinterest.forms import FormLogin, FormCriarConta, FormFoto
 import os
 from werkzeug.utils import secure_filename
 
-@app.route('/', method=["GET", "POST"])
+@app.route('/', methods=["GET", "POST"])
 def homepage():
      form_login = FormLogin()
      if form_login.validate_on_submit():
@@ -18,7 +18,7 @@ def homepage():
           return render_template("homepage.html", form=form_login)
 
 
-@app.route("/criarconta", method=["GET", "POST"])
+@app.route("/criarconta", methods=["GET", "POST"])
 def criar_conta():
      form_criarconta = FormCriarConta()
      if form_criarconta.validate_on_submit():
