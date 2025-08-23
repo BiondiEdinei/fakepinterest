@@ -1,21 +1,21 @@
 # criar as rotas do nosso site (os links@app.route("/")
-from flask import render_template, url_for, redirect
+from flask import render_template, url_for, redirect, send_from_directory
 from fakepinterest import app, database, bcrypt
 from fakepinterest.models import Usuario, Foto
 from flask_login import login_required, login_user, logout_user, current_user
 from fakepinterest.forms import FormLogin, FormCriarConta, FormFoto
-import os
 from werkzeug.utils import secure_filename
+import os
 
 @app.route('/', methods=["GET", "POST"])
 def homepage():
-     form_login = FormLogin()
-     if form_login.validate_on_submit():
-          usuario = Usuario.query.filter_by(email=form_login.email.data).first()
-          if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
-               login_user(usuario)
-               return redirect(url_for('perfil', id_usuario=usuario.id))
-          return render_template("homepage.html", form=form_login)
+    form_login = FormLogin()
+    if form_login.validate_on_submit():
+        usuario = Usuario.query.filter_by(email=form_login.email.data).first()
+        if usuario and bcrypt.check_password_hash(usuario.senha.encode("utf-8"), form_login.senha.data):
+            login_user(usuario)
+            return redirect(url_for('perfil', id_usuario=usuario.id))
+    return render_template("homepage.html", form=form_login)
 
 
 @app.route("/criarconta", methods=["GET", "POST"])
