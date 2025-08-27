@@ -23,13 +23,18 @@ def criar_conta():
      form_criarconta = FormCriarConta()
      if form_criarconta.validate_on_submit():
          senha = bcrypt.generate_password_hash(form_criarconta.senha.data).decode("utf-8")
-         usuario = Usuario(username=form_criarconta.username.data, senha=senha, email=form_criarconta.email.data)
+         usuario = Usuario(username=form_criarconta.username.data,
+                           senha=senha, email=form_criarconta.email.data)
          database.session.add(usuario)
          database.session.commit()
          login_user(usuario, remember=True)
          return redirect(url_for("perfil", id_usuario=usuario.id))
      return render_template("criarconta.html", form=form_criarconta)
 
+@app.route(f'/uploads/<path:filename>')
+def download_file(filename):
+    print(filename)
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename, as_attachment=True)
 
 @app.route("/perfil/<id_usuario>", methods=["GET", "POST"])
 @login_required
